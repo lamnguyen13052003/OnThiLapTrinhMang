@@ -7,14 +7,14 @@ import java.util.StringTokenizer;
 
 public class ThreadClient extends Thread {
     private Socket client;
-    private BufferedInputStream in;
-    private BufferedOutputStream out, fileOut;
+    private DataInputStream in;
+    private DataOutputStream out, fileOut;
     private byte[] buffer;
 
     public ThreadClient(Socket socket) throws IOException {
         this.client = socket;
-        in = new BufferedInputStream(socket.getInputStream());
-        out = new BufferedOutputStream(socket.getOutputStream());
+        in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+        out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         buffer = new byte[1024 * 100];
     }
 
@@ -22,15 +22,16 @@ public class ThreadClient extends Thread {
     public void run() {
         String command = null;
         try {
-            write("welcome to my server...");
+            out.writeUTF("welcome to my server...");
+            out.flush();
             while (true) {
-                command = read();
-                if(command.contains("quit")) break;
+                command = in.readUTF();
+                if (command.contains("quit")) break;
                 action(command);
             }
 
             in.close();
-            out.flush();
+            out.close();
             client.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -50,45 +51,22 @@ public class ThreadClient extends Thread {
                 }
             }
         } catch (Exception e) {
-            read();
-            System.out.println("Lỗi cú pháp");
         }
     }
 
     private void upload(String dest) throws IOException {
-        write("1");
-        if(read().equals("-1")) return;
-        fileOut = new BufferedOutputStream(new FileOutputStream(dest));
-        write("1");
-        int fileSize = 0;
-        try {
-            fileSize = Integer.valueOf(read());
-            write("1");
-        }catch (NumberFormatException e){
-            write("-1");
-            return;
-        }
-
-        System.out.println(fileSize);
+        if (in.readInt() == -1) return;
+        Long fileSize = in.readLong();
         int data = 0;
-        while(fileSize > 0) {
+        fileOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(dest)));
+        while (fileSize > 0) {
             data = in.read(buffer);
             fileOut.write(buffer, 0, data);
             fileOut.flush();
             fileSize -= data;
         }
         fileOut.close();
-        write("done");
-        System.out.println(read());
-    }
-
-    private void write(String value) throws IOException {
-        out.write(value.getBytes());
+        out.writeUTF("Done...");
         out.flush();
-    }
-
-    private String read() throws IOException {
-        int data = in.read(buffer);
-        return new String(Arrays.copyOf(buffer, data));
     }
 }
