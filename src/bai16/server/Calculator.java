@@ -1,4 +1,4 @@
-package bai16;
+package bai16.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

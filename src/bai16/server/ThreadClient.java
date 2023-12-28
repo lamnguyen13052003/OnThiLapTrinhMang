@@ -1,4 +1,4 @@
-package bai16;
+package bai16.server;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,7 +22,7 @@ public class ThreadClient extends Thread {
             while (true) {
                 command = in.readLine();
                 try {
-                    if (command.toLowerCase().contains("quit")) break;
+                    if (command == null || command.toLowerCase().contains("quit")) break;
                     action(command);
                 } catch (NoSuchElementException nsee) {
                     out.println(nsee.getMessage());
