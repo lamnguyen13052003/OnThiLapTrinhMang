@@ -9,8 +9,6 @@ public class ThreadClient extends Thread {
     private List<Student> students;
     private BufferedReader in;
     private PrintWriter out;
-    private User user;
-    private String userName;
 
     public ThreadClient(Socket client, Map<String, String> users, List<Student> students) throws IOException {
         this.users = users;
@@ -37,43 +35,29 @@ public class ThreadClient extends Thread {
                     continue;
                 }
 
-                if (user == null) {
+                List<Student> result = null;
+                try {
                     switch (cm) {
-                        case "user" -> {
-                            setUser(value);
+                        case "fbn" -> {
+                            value = command.substring(3, command.length());
+                            result = findByName(value);
                         }
-                        case "pass" -> {
-                            setPassword(value);
+                        case "fba" -> {
+                            result = findByAge(Integer.parseInt(value));
+                        }
+                        case "fbs" -> {
+                            result = findByScore(Double.parseDouble(value));
                         }
                         default -> {
                             out.println("Lỗi cú pháp!");
+                            continue;
                         }
                     }
-                } else {
-                    List<Student> result = null;
-                    try {
-                        switch (cm) {
-                            case "fbn" -> {
-                                value = command.substring(3, command.length());
-                                result = findByName(value);
-                            }
-                            case "fba" -> {
-                                result = findByAge(Integer.parseInt(value));
-                            }
-                            case "fbs" -> {
-                                result = findByScore(Double.parseDouble(value));
-                            }
-                            default -> {
-                                out.println("Lỗi cú pháp!");
-                                continue;
-                            }
-                        }
 
-                        out.println("1");
-                        writeListStudent(result);
-                    } catch (NumberFormatException nfe) {
-                        out.println("Lỗi cú pháp!");
-                    }
+                    out.println("1");
+                    writeListStudent(result);
+                } catch (NumberFormatException nfe) {
+                    out.println("Lỗi cú pháp!");
                 }
             }
 
@@ -81,24 +65,6 @@ public class ThreadClient extends Thread {
             out.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void setUser(String userName) {
-        if (users.containsKey(userName)) {
-            this.userName = userName;
-            out.println("Thành công!");
-        } else {
-            out.println("User Name không tồn tại");
-        }
-    }
-
-    private void setPassword(String password) {
-        if (users.get(userName).equals(password)) {
-            this.user = new User(userName, password);
-            out.println("Đăng nhập thành công!");
-        } else {
-            out.println("Mật khẩu không chính xác!");
         }
     }
 

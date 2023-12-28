@@ -1,4 +1,4 @@
-package bai17.server;
+package bai18.server;
 
 public class User {
     private String userName, password;
