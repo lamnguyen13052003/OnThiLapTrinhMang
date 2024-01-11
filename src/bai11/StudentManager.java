@@ -33,7 +33,6 @@ public class StudentManager {
             raf.writeInt(st.getAge());
             raf.writeUTF(st.getAddress());
             raf.writeDouble(st.getGrade());
-            raf.writeInt((int) raf.length());
         }
         raf.close();
     }
