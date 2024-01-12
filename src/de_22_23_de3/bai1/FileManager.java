@@ -1,4 +1,4 @@
-package de_22_23_de4.bai1;
+package de_22_23_de3.bai1;
 
 import java.io.*;
 
@@ -23,10 +23,10 @@ public class FileManager {
         for (File file : files) {
             positions[index] = rf.getFilePointer();
             rf.writeLong(0);
-            rf.writeUTF(file.getName());
             rf.writeLong(file.length());
+            rf.writeUTF(file.getName());
             rf.seek(positions[index++]);
-            if (index == files.length) rf.writeLong(-1);
+            if (index == files.length) rf.writeLong(0);
             else {
                 long nextPost = rf.length() + file.length();
                 rf.writeLong(nextPost);
@@ -53,8 +53,8 @@ public class FileManager {
         while (true) {
             rf.seek(nextEntryPost);
             nextEntryPost = rf.readLong();
-            fileName = rf.readUTF();
             fileSize = rf.readLong();
+            fileName = rf.readUTF();
             if (fileName.equals(extraFile)) {
                 writeFile = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(destFile)));
                 while (fileSize > 0) {
@@ -69,19 +69,19 @@ public class FileManager {
                 return;
             }
 
-            if(nextEntryPost == -1) break;
+            if(nextEntryPost == 0) break;
         }
-
         rf.close();
         System.out.println("file not found...");
     }
 
-    public static void main(String[] args) throws IOException {
-        String destFolder = "folder_test";
-        String packDest = "pack_file";
-        String extraFile = "Lịch sử đảng- Nhóm 10.pptx";
-        String destFile = "Lịch sử đảng- Nhóm 10 coppy de 4.pptx";
-        pack(destFolder, packDest);
-        unPack(packDest, extraFile, destFile);
+
+        public static void main (String[]args) throws IOException {
+            String destFolder = "folder_test";
+            String packDest = "pack_file";
+            String extraFile = "Lịch sử đảng- Nhóm 10.pptx";
+            String destFile = "Lịch sử đảng- Nhóm 10 coppy de 3.pptx";
+            pack(destFolder, packDest);
+            unPack(packDest, extraFile, destFile);
+        }
     }
-}
