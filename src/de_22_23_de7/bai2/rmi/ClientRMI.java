@@ -1,4 +1,4 @@
-package de_22_23.bai2.rmi;
+package de_22_23_de7.bai2.rmi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de_22_23.model.Product;
+import de_22_23_de7.model.Product;
 
 public class ClientRMI {
 	private BufferedReader userIn;

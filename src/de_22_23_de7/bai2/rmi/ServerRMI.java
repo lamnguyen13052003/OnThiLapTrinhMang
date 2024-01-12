@@ -1,4 +1,4 @@
-package de_22_23.bai2.rmi;
+package de_22_23_de7.bai2.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -1,4 +1,4 @@
-package de_22_23.bai1;
+package de_22_23_de7.bai1;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de_22_23.model.Student;
+import de_22_23_de7.model.Student;
 
 public class StudentManager {
 	private RandomAccessFile rf;

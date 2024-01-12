@@ -1,4 +1,4 @@
-package de_22_23.model;
+package de_22_23_de7.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

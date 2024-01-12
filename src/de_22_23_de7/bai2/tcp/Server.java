@@ -1,4 +1,4 @@
-package de_22_23.bai2.tcp;
+package de_22_23_de7.bai2.tcp;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

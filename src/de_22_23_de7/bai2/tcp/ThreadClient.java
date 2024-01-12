@@ -1,4 +1,4 @@
-package de_22_23.bai2.tcp;
+package de_22_23_de7.bai2.tcp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de_22_23.model.Product;
+import de_22_23_de7.model.Product;
 
 public class ThreadClient extends Thread {
 	private BufferedReader reader;

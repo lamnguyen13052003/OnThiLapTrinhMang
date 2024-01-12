@@ -1,7 +1,5 @@
-package de_22_23.bai2.rmi;
+package de_22_23_de7.bai2.tcp;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,33 +7,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de_22_23.model.Connect;
-import de_22_23.model.Product;
+import de_22_23_de7.model.Connect;
+import de_22_23_de7.model.Product;
 
-public class ProductRemote extends UnicastRemoteObject implements IProductService {
+public class ProductDAO {
 	private Connection connection;
 
-	protected ProductRemote() throws RemoteException {
-		super();
-		try {
-			connection = Connect.getConnection();
-		} catch (ClassNotFoundException | SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	protected ProductDAO() throws ClassNotFoundException, SQLException {
+		connection = Connect.getConnection();
 	}
 
-	@Override
-	public String add(Product product) throws RemoteException {
+	public String add(Product product) {
 		String sqlSelect = "SELECT id FROM products WHERE id = ?";
 		String sqlInsert = "INSERT INTO products(id, name, quantity, price) values (?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(sqlSelect);
 			statement.setInt(1, product.getId());
 			ResultSet resultSet = statement.executeQuery();
-			if(resultSet.next()) return "Sản phẩm đã tồn tại!";
+			if (resultSet.next())
+				return "Sản phẩm đã tồn tại!";
 			resultSet.close();
 			statement.close();
-			
+
 			statement = connection.prepareStatement(sqlInsert);
 			statement.setInt(1, product.getId());
 			statement.setString(2, product.getName());
@@ -50,8 +43,7 @@ public class ProductRemote extends UnicastRemoteObject implements IProductServic
 		return "Thành công!";
 	}
 
-	@Override
-	public String sell(int id) throws RemoteException {
+	public String sell(int id) {
 		String sql = "SELECT quantity FROM products WHERE id = ?";
 		try {
 			PreparedStatement statement = connection.prepareStatement(sql);
@@ -78,8 +70,7 @@ public class ProductRemote extends UnicastRemoteObject implements IProductServic
 		return "Thành công!";
 	}
 
-	@Override
-	public String update(int id, double newPrice) throws RemoteException {
+	public String update(int id, double newPrice) {
 		String sql = "UPDATE products set price = ? WHERE id = ?";
 		int lineRePlace = 0;
 		try {
@@ -96,17 +87,17 @@ public class ProductRemote extends UnicastRemoteObject implements IProductServic
 		return lineRePlace > 0 ? "OK" : "CAN NOT UPDATE";
 	}
 
-	@Override
-	public List<Product> find(String name) throws RemoteException {
+	public List<Product> find(String name) {
 		List<Product> products = new ArrayList<>();
 		String sql = "SELECT * FROM products WHERE name LIKE ?";
 		try {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, "%"+name.toLowerCase()+"%");
+			statement.setString(1, "%" + name.toLowerCase() + "%");
 			ResultSet resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				Product product = new Product(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("quantity"), resultSet.getDouble("price"));
+			while (resultSet.next()) {
+				Product product = new Product(resultSet.getInt("id"), resultSet.getString("name"),
+						resultSet.getInt("quantity"), resultSet.getDouble("price"));
 				products.add(product);
 			}
 			resultSet.close();
@@ -118,8 +109,7 @@ public class ProductRemote extends UnicastRemoteObject implements IProductServic
 		return products;
 	}
 
-	@Override
-	public String exit() throws RemoteException {
+	public String exit() {
 		return "Thành công!";
 	}
 
